@@ -1,0 +1,3 @@
+IFS=",";
+id "${_USER}" | cut -d= -f4 | while read group; do printf "%s\n" $group; done
+# _USER The account identifier
