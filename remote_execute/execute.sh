@@ -57,7 +57,6 @@ if [ ! -f "$_TEMPLATE" ]; then
 fi
 
 #Put template's variables in an array
-#declare -a templateVariables=($(sed -n '/\${_[^}]\+}/p' "$_TEMPLATE" | sed -e 's;^[^$]*${_;;' -e 's;}[^}]*$;;' -e 's;}[^\$]*${_;\n;g'))
 declare -a templateVariables=($(grep '\$' $_TEMPLATE | sed -${sed_regexp_option}e 's;\$\{*;\n;g' | grep '^_' | sed -e 's;^\([_a-zA-Z0-9]\+\).*$;\1;' | sort -u))
 
 
@@ -74,7 +73,6 @@ do
 		missingArray+=("$i");
 	fi
 done
-#echo "\$missing: $missing";
 
 #If anything is missing, alert the user and quit
 if [ "$missing" != "" ]; then
