@@ -10,6 +10,15 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
     SOURCE="$DIR/$TARGET" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
   fi
 done
+
+# Check for sed option
+# per https://github.com/danielebailo/couchdb-dump/pull/38/files
+if [ "`uname -s`" = "Darwin" ]; then
+    sed_regexp_option='E'
+else
+    sed_regexp_option='r'
+fi
+
 templateDir="$(dirname $SOURCE)/templates/";
 
 #if the filename is not execute, this is being started by a symbolic link
@@ -49,7 +58,8 @@ fi
 
 #Put template's variables in an array
 #declare -a templateVariables=($(sed -n '/\${_[^}]\+}/p' "$_TEMPLATE" | sed -e 's;^[^$]*${_;;' -e 's;}[^}]*$;;' -e 's;}[^\$]*${_;\n;g'))
-declare -a templateVariables=($(grep '\$' $_TEMPLATE | sed -re 's;\$\{*;\n;g' | grep '^_' | sed -e 's;^\([_a-zA-Z0-9]\+\).*$;\1;' | sort -u))
+declare -a templateVariables=($(grep '\$' $_TEMPLATE | sed -${sed_regexp_option}e 's;\$\{*;\n;g' | grep '^_' | sed -e 's;^\([_a-zA-Z0-9]\+\).*$;\1;' | sort -u))
+
 
 missing="";
 declare -a missingArray;

@@ -1,4 +1,4 @@
-#Expects one argument which is a path to a template file
+#Expects one argument which is a path to a tempalte file
 if [ "$1" == "" ]; then
 	(>&2 echo "Missing argument \"template\".";)
 	exit 1;
